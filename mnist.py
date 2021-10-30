@@ -8,7 +8,7 @@ from tensorflow.keras.layers import InputLayer
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import BatchNormalization
-from tensorflow.keras.optimizers.schedules import ExponentialDecay
+from tensorflow.keras.layers import Activation
 from tensorflow.keras.optimizers import Adam
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     print("n_hidden_layers = "+str(n_hidden_layers))
 
     # Training parameters
-    num_epochs = 1000
+    num_epochs = 50
     print("num_epochs = "+str(num_epochs))
 
     # Dropout parameters
@@ -37,12 +37,12 @@ if __name__ == "__main__":
     print("dropout_hidden = "+str(dropout_hidden))
 
     # Decaying LR 
-    LR_start = .003
+    LR_start = .001
     print("LR_start = "+str(LR_start))
-    LR_fin = 0.0000003
-    print("LR_fin = "+str(LR_fin))
-    LR_decay = (LR_fin/LR_start)**(1/num_epochs)
-    print("LR_decay = "+str(LR_decay))
+    #LR_fin = 0.0000003
+    #print("LR_fin = "+str(LR_fin))
+    #LR_decay = (LR_fin/LR_start)**(1/num_epochs)
+    #print("LR_decay = "+str(LR_decay))
 
     model_path = "mnist_model.json"
     print("model_path = "+str(model_path))
@@ -58,6 +58,11 @@ if __name__ == "__main__":
     X_train = X_train.reshape(X_train.shape[0], 28*28)
     X_test = X_test.reshape(X_test.shape[0], 28*28)
 
+    X_train = X_train.astype('float32')
+    X_test = X_test.astype('float32')
+    X_train /= 255
+    X_test /= 255
+
     # Onehot the targets
     y_train = np.float32(np.eye(10)[y_train])
     y_test = np.float32(np.eye(10)[y_test])
@@ -69,20 +74,16 @@ if __name__ == "__main__":
     mlp.add(Dropout(rate=dropout_in))
 
     for k in range(n_hidden_layers):
-        mlp.add(Dense(num_units))
+        mlp.add(Dense(units=num_units))
         mlp.add(BatchNormalization(momentum=alpha, epsilon=epsilon))
+        mlp.add(Activation('tanh'))
         mlp.add(Dropout(rate=dropout_hidden))
 
-    mlp.add(Dense(10))
+    mlp.add(Dense(units=10))
     mlp.add(BatchNormalization(momentum=alpha, epsilon=epsilon))
 
-    LR_schedule = ExponentialDecay(
-        LR_start,
-        decay_steps=num_epochs,
-        decay_rate=LR_decay,
-        staircase=True)
+    mlp.compile(loss='squared_hinge', optimizer=Adam(learning_rate=LR_start), metrics=['accuracy'])
 
-    mlp.compile(loss='squared_hinge', optimizer=Adam(learning_rate=LR_schedule), metrics=['accuracy'])
     mlp.fit(X_train, y_train, epochs=num_epochs, batch_size=batch_size, verbose=1, validation_split=1/6)
 
     test_results = mlp.evaluate(X_test, y_test, verbose=1)
