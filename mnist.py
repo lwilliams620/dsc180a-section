@@ -35,9 +35,9 @@ if __name__ == "__main__":
     dropout_hidden = .5
     print("dropout_hidden = "+str(dropout_hidden))
 
-    # Decaying LR 
-    LR_start = .001
-    print("LR_start = "+str(LR_start))
+    # LR
+    LR = .001
+    print("LR = "+str(LR_start))
 
     model_path = "mnist_model.json"
     print("model_path = "+str(model_path))
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     mlp.add(Dense(units=10))
     mlp.add(BatchNormalization(momentum=alpha, epsilon=epsilon))
 
-    mlp.compile(loss='squared_hinge', optimizer=Adam(learning_rate=LR_start), metrics=['accuracy'])
+    mlp.compile(loss='squared_hinge', optimizer=Adam(learning_rate=LR), metrics=['accuracy'])
 
     mlp.fit(X_train, y_train, epochs=num_epochs, batch_size=batch_size, verbose=1, validation_split=1/6)
 
