@@ -2,7 +2,6 @@ import numpy as np
 np.random.seed(1234)
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
-from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import InputLayer
 from tensorflow.keras.layers import Dropout
@@ -39,10 +38,6 @@ if __name__ == "__main__":
     # Decaying LR 
     LR_start = .001
     print("LR_start = "+str(LR_start))
-    #LR_fin = 0.0000003
-    #print("LR_fin = "+str(LR_fin))
-    #LR_decay = (LR_fin/LR_start)**(1/num_epochs)
-    #print("LR_decay = "+str(LR_decay))
 
     model_path = "mnist_model.json"
     print("model_path = "+str(model_path))
