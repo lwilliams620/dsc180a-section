@@ -20,13 +20,13 @@ def binarization(W,H):
 
     # 0 or 1 -> -1 or 1
     a = np.ones(len(Wb))
-    Wb = tf.cast(tf.keras.backend.switch(Wb,H*a,-H*a), tf.float32)
+    Wb = tf.cast(tf.keras.backend.switch(Wb,tf.ones(shape=Wb.shape),tf.ones(shape=Wb.shape)*-1), tf.float32)
 
     return Wb
 
 class Dense(tf.keras.layers.Dense):
     def __init__(self, units, **kwargs):
-        self.H = 1.0
+        self.H = 1
         
         super(Dense, self).__init__(units, kernel_initializer=tf.keras.initializers.RandomUniform(-self.H,self.H), **kwargs)
         self.W = self.kernel_initializer(shape=(1, 28*28))
