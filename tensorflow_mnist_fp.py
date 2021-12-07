@@ -1,5 +1,3 @@
-# Full Precision Model for MNIST data
-
 import numpy as np
 np.random.seed(1234)
 import tensorflow as tf
