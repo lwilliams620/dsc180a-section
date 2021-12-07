@@ -1,3 +1,5 @@
+# Full Precision Model for MNIST data
+
 import numpy as np
 np.random.seed(1234)
 import tensorflow as tf
@@ -13,46 +15,35 @@ from tensorflow.keras.optimizers import Adam
 if __name__ == "__main__":
     # BN parameters
     batch_size = 100
-    print("batch_size = "+str(batch_size))
     alpha = .1
-    print("alpha = "+str(alpha))
     epsilon = 1e-4
-    print("epsilon = "+str(epsilon))
 
     # MLP parameters
     num_units = 4096
-    print("num_units = "+str(num_units))
     n_hidden_layers = 3
-    print("n_hidden_layers = "+str(n_hidden_layers))
 
     # Training parameters
     num_epochs = 50
-    print("num_epochs = "+str(num_epochs))
 
     # Dropout parameters
     dropout_in = .2 # 0. means no dropout
-    print("dropout_in = "+str(dropout_in))
     dropout_hidden = .5
-    print("dropout_hidden = "+str(dropout_hidden))
 
     # LR
     LR = .001
-    print("LR = "+str(LR_start))
 
+    # Model and weight paths
     model_path = "mnist_model.json"
-    print("model_path = "+str(model_path))
-    
     weights_path = "mnist_weights.h5"
-    print("weights_path = "+str(weights_path))
 
-    print('Loading MNIST dataset...')
-
+    # Load Data
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
     # Reshape the data
     X_train = X_train.reshape(X_train.shape[0], 28*28)
     X_test = X_test.reshape(X_test.shape[0], 28*28)
 
+    # Turn images into grayscale
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
     X_train /= 255
@@ -62,8 +53,7 @@ if __name__ == "__main__":
     y_train = np.float32(np.eye(10)[y_train])
     y_test = np.float32(np.eye(10)[y_test])
 
-    print('Building the MLP...')
-
+    # Build MLP
     mlp = Sequential()
     mlp.add(InputLayer(input_shape=(28*28)))
     mlp.add(Dropout(rate=dropout_in))
