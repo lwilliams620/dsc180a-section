@@ -8,4 +8,4 @@ tensorflow_mnist_fp.py contains the code for the binarized TensorFlow model on M
 
 tensorflow_mnist_binary.py contains the code for the full precision TensorFlow model on MNIST data
 
-test.py contains the code for the PyTorch models
+DSC180A-A12 Pytorch.ipynb contains the nestwes code for the PyTorch models, training and testing data through MNIST, SVHN and CIFAR10 datasets
